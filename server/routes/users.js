@@ -3,6 +3,9 @@ var router = express.Router();
 var user = require('../controllers/user')
 
 /* GET home page. */
+
+router.post('/login', user.login)
+
 router.get('/', user.getUsers)
 
 router.get('/:id', user.getUser)

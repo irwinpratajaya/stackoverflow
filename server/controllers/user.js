@@ -1,6 +1,33 @@
 var user = require('../models/users')
+var jwt = require('jsonwebtoken');
+var passwordHash = require('password-hash');
 
 var users = {}
+
+users.login = function (req,res,next) {
+  user.findOne({
+    username: req.body.username
+  }, function (err,data) {
+    if (err) {
+      res.json(err)
+    } else {
+      if (!data) {
+        res.json('User not found')
+      } else {
+        var verify = passwordHash.verify(req.body.password, data.password)
+        if (verify) {
+          var token = jwt.sign({
+                        username: data.username,
+                        email: data.email
+                      }, 'rahasia');
+          res.json(token)
+        } else {
+          res.json('wrong password')
+        }
+      }
+    }
+  })
+}
 
 users.getUsers = function (req,res,next) {
   user.find({}).then(function(err, data) {
@@ -26,7 +53,7 @@ users.createUser = function (req,res,next) {
   user.create({
     username: req.body.username,
     email: req.body.email,
-    password: req.body.password
+    password: passwordHash.generate(req.body.password)
   }).then (function (data) {
     res.json(data)
   })

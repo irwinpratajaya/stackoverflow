@@ -10,7 +10,9 @@
       <article class="" v-for="">
         {{question[0].answer}}
       </article>
+      <a href="#"><span class="glyphicon glyphicon-chevron-up"></span></a>
       {{question[0].votes}}
+      <a href="#"><span class="glyphicon glyphicon-chevron-down"></span></a>
 
       <h3>Your Answer</h3>
       <textarea name="name" rows="8" cols="80"></textarea>
