@@ -8,13 +8,15 @@ users.login = function (req,res,next) {
   user.findOne({
     username: req.body.username
   }, function (err,data) {
+    console.log(data);
     if (err) {
       res.json(err)
     } else {
       if (!data) {
-        res.json('User not found')
+        res.json(null)
       } else {
         var verify = passwordHash.verify(req.body.password, data.password)
+
         if (verify) {
           var token = jwt.sign({
                         username: data.username,
@@ -22,7 +24,7 @@ users.login = function (req,res,next) {
                       }, 'rahasia');
           res.json(token)
         } else {
-          res.json('wrong password')
+          res.json(null)
         }
       }
     }
@@ -53,6 +55,7 @@ users.createUser = function (req,res,next) {
   user.create({
     username: req.body.username,
     email: req.body.email,
+    // password: req.body.password
     password: passwordHash.generate(req.body.password)
   }).then (function (data) {
     res.json(data)
